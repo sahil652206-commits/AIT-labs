@@ -1,0 +1,79 @@
+# Name: Sahil Deshmukh
+# Class: TY B.Tech (AI & DS)
+# Division: A
+# Roll No.: 12
+# Semester: V
+
+# Practical No. 4: N-Queens using Backtracking and Forward Checking
+
+def is_safe(board, row, col):
+    for i in range(row):
+        # Check same column
+        if board[i] == col:
+            return False
+
+        # Check diagonal attack
+        if abs(board[i] - col) == abs(i - row):
+            return False
+
+    return True
+
+
+def forward_check(row, col, domains, n):
+    new_domains = [d.copy() for d in domains]
+
+    for r in range(row + 1, n):
+        # Remove the same column
+        if col in new_domains[r]:
+            new_domains[r].remove(col)
+
+        # Remove diagonal positions
+        diagonal1 = col + (r - row)
+        diagonal2 = col - (r - row)
+
+        if diagonal1 in new_domains[r]:
+            new_domains[r].remove(diagonal1)
+
+        if diagonal2 in new_domains[r]:
+            new_domains[r].remove(diagonal2)
+
+    return new_domains
+
+
+def solve_nqueens(board, row, n, domains, solutions):
+    # All queens are placed
+    if row == n:
+        solutions.append(board.copy())
+        return
+
+    for col in domains[row]:
+        if is_safe(board, row, col):
+            board[row] = col
+
+            # Apply forward checking
+            new_domains = forward_check(
+                row, col, domains, n
+            )
+
+            # Continue only if no future domain is empty
+            if all(new_domains[r]
+                   for r in range(row + 1, n)):
+                solve_nqueens(
+                    board, row + 1, n,
+                    new_domains, solutions
+                )
+
+            # Backtrack
+            board[row] = -1
+
+
+# Main program
+n = 8
+board = [-1] * n
+domains = [list(range(n)) for _ in range(n)]
+solutions = []
+
+solve_nqueens(board, 0, n, domains, solutions)
+
+print("Number of solutions:", len(solutions))
+print("One solution:", solutions[0])
