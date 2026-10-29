@@ -1,0 +1,35 @@
+# Name: Sahil Deshmukh
+# Class: TY B.Tech (AI & DS)
+# Division: A
+# Roll No.: 12
+# Semester: V
+
+# Practical No. 1: Water Jug Problem
+
+jug1 = 0
+jug2 = 0
+
+print("Initial State:", (jug1, jug2))
+
+jug1 = 4
+print("Fill Jug1:", (jug1, jug2))
+
+jug1 = 1
+jug2 = 3
+print("Pour Jug1 -> Jug2:", (jug1, jug2))
+
+jug2 = 0
+print("Empty Jug2:", (jug1, jug2))
+
+jug1 = 0
+jug2 = 1
+print("Pour Jug1 -> Jug2:", (jug1, jug2))
+
+jug1 = 4
+print("Fill Jug1:", (jug1, jug2))
+
+jug1 = 2
+jug2 = 3
+print("Pour Jug1 -> Jug2:", (jug1, jug2))
+
+print("Goal reached:", (jug1, jug2))
