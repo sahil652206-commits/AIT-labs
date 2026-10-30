@@ -1,0 +1,180 @@
+# Name: Sahil Deshmukh
+# Class: TY B.Tech (AI & DS)
+# Division: A
+# Roll No.: 12
+# Semester: V
+
+# Practical No. 09: Rule-Based Expert System
+
+class ExpertSystem:
+
+    def __init__(self):
+        self.facts = {}
+        self.rules = []
+        self.derived_facts = []
+
+    # Add facts
+    def add_fact(self, fact, value):
+        self.facts[fact] = value
+
+    # Add IF-THEN rules
+    def add_rule(self, conditions, conclusion):
+        self.rules.append({
+            'conditions': conditions,
+            'conclusion': conclusion
+        })
+
+    # Check whether rule conditions are satisfied
+    def check_rule(self, rule):
+        conditions = rule['conditions']
+
+        for fact, required_value in conditions.items():
+            if fact not in self.facts or self.facts[fact] != required_value:
+                return False
+
+        return True
+
+    # Forward chaining
+    def forward_chain(self):
+        changed = True
+        iteration = 0
+
+        print("\n" + "=" * 60)
+        print("FORWARD CHAINING INFERENCE ENGINE")
+        print("=" * 60)
+
+        print("\nInitial Facts:")
+        for fact, value in self.facts.items():
+            print(f"{fact}: {value}")
+
+        while changed:
+            changed = False
+            iteration += 1
+
+            print(f"\n--- Iteration {iteration} ---")
+
+            for rule in self.rules:
+                if self.check_rule(rule):
+                    conclusion = rule['conclusion']
+
+                    if conclusion not in self.derived_facts:
+                        self.derived_facts.append(conclusion)
+                        changed = True
+
+                        print("Rule fired:", conclusion)
+                        print("Conditions met:", rule['conditions'])
+
+            if not changed:
+                print("No new facts derived. Inference complete.")
+
+        return self.derived_facts
+
+    # Display final diagnosis
+    def display_diagnosis(self):
+        print("\n" + "=" * 60)
+        print("DIAGNOSIS RESULTS")
+        print("=" * 60)
+
+        if self.derived_facts:
+            print("\nPossible Diagnoses:")
+
+            for i, diagnosis in enumerate(self.derived_facts, 1):
+                print(f"{i}. {diagnosis}")
+        else:
+            print("No matching diagnosis found.")
+
+        print("=" * 60)
+
+
+# Function to add all rules
+def add_medical_rules(system):
+
+    system.add_rule(
+        {'fever': True, 'cough': True, 'sore_throat': True},
+        'Diagnosis: Common Cold'
+    )
+
+    system.add_rule(
+        {'fever': True, 'cough': True,
+         'body_ache': True, 'chills': True},
+        'Diagnosis: Flu (Influenza)'
+    )
+
+    system.add_rule(
+        {'fever': True, 'cough': True,
+         'shortness_of_breath': True, 'chest_pain': True},
+        'Diagnosis: Pneumonia'
+    )
+
+    system.add_rule(
+        {'fever': True, 'cough': True},
+        'Diagnosis: Possible Respiratory Infection'
+    )
+
+    system.add_rule(
+        {'fever': True},
+        'Recommendation: Monitor temperature closely'
+    )
+
+    system.add_rule(
+        {'cough': True},
+        'Recommendation: Drink warm liquids and rest'
+    )
+
+
+# Example 1: Patient with cold symptoms
+print("\n" + "#" * 60)
+print("MEDICAL DIAGNOSIS EXPERT SYSTEM")
+print("#" * 60)
+
+expert_sys = ExpertSystem()
+add_medical_rules(expert_sys)
+
+symptoms = {
+    'fever': True,
+    'cough': True,
+    'sore_throat': True,
+    'body_ache': False,
+    'chills': False,
+    'shortness_of_breath': False,
+    'chest_pain': False
+}
+
+print("\nPatient 1 Symptoms:")
+
+for symptom, present in symptoms.items():
+    expert_sys.add_fact(symptom, present)
+    status = "Present" if present else "Absent"
+    print(f"{symptom}: {status}")
+
+expert_sys.forward_chain()
+expert_sys.display_diagnosis()
+
+
+# Example 2: Patient with flu symptoms
+print("\n\n" + "#" * 60)
+print("EXAMPLE 2: DIFFERENT PATIENT")
+print("#" * 60)
+
+expert_sys2 = ExpertSystem()
+add_medical_rules(expert_sys2)
+
+symptoms2 = {
+    'fever': True,
+    'cough': True,
+    'sore_throat': False,
+    'body_ache': True,
+    'chills': True,
+    'shortness_of_breath': False,
+    'chest_pain': False
+}
+
+print("\nPatient 2 Symptoms:")
+
+for symptom, present in symptoms2.items():
+    expert_sys2.add_fact(symptom, present)
+    status = "Present" if present else "Absent"
+    print(f"{symptom}: {status}")
+
+expert_sys2.forward_chain()
+expert_sys2.display_diagnosis()
